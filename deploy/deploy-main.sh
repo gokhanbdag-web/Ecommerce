@@ -40,7 +40,7 @@ fi
 [[ -f "$SITE_ROOT/ecommerce-db.php" ]] ||
   { echo "Refusing deployment: private MySQL config missing"; exit 1; }
 
-# Only public runtime files are deployed. No --delete: existing user files remain.
+# Only public runtime files are deployed. Existing user files remain untouched.
 # Database migrations must be applied manually, with a DB backup, before activation.
 includes=(
   --include='/index.php' --include='/page.php'
