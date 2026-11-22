@@ -26,3 +26,78 @@ msgstr "İngilizce (Amerika Birleşik Devletleri)"
 
 msgid "Turkish (Türkiye)"
 msgstr "Türkçe (Türkiye)"
+
+msgid "Settings"
+msgstr "Ayarlar"
+
+msgid "Log In"
+msgstr "Giriş Yap"
+
+msgid "General Settings"
+msgstr "Genel Ayarlar"
+
+msgid "Email"
+msgstr "E-posta"
+
+msgid "Password"
+msgstr "Şifre"
+
+msgid "Site Title"
+msgstr "Site Başlığı"
+
+msgid "Tagline"
+msgstr "Slogan"
+
+msgid "Administration Email"
+msgstr "Yönetici E-postası"
+
+msgid "Timezone"
+msgstr "Saat Dilimi"
+
+msgid "Save Changes"
+msgstr "Değişiklikleri Kaydet"
+
+msgid "Log Out"
+msgstr "Çıkış Yap"
+
+msgid "Install Ecommerce"
+msgstr "Ecommerce Kurulumu"
+
+msgid "Administrator Email"
+msgstr "Yönetici E-postası"
+
+msgid "Administrator Password"
+msgstr "Yönetici Şifresi"
+
+msgid "Complete Installation"
+msgstr "Kurulumu Tamamla"
+
+msgid "Installation already completed"
+msgstr "Kurulum zaten tamamlanmış"
+
+msgid "Database extension unavailable"
+msgstr "Veritabanı uzantısı kullanılamıyor"
+
+msgid "Storage unavailable"
+msgstr "Depolama kullanılamıyor"
+
+msgid "Invalid request token"
+msgstr "Geçersiz istek anahtarı"
+
+msgid "Use a valid email and password of at least 12 characters."
+msgstr "Geçerli bir e-posta ve en az 12 karakterlik şifre kullanın."
+
+msgid "Invalid credentials"
+msgstr "Geçersiz giriş bilgileri"
+
+msgid "Invalid language"
+msgstr "Geçersiz dil"
+
+msgid "Invalid email"
+msgstr "Geçersiz e-posta"
+
+msgid "Invalid timezone"
+msgstr "Geçersiz saat dilimi"
+
+msgid "Setting too long"
+msgstr "Ayar çok uzun"
