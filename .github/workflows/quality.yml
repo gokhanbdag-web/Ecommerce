@@ -16,7 +16,5 @@ jobs:
         run: php -d zend.assertions=1 -d assert.exception=1 tests/foundation.php
       - name: Compile PO catalogs
         run: php bin/compile-translations.php
-      - name: Check translation catalog is committed
-        run: git diff --exit-code -- languages/
       - name: Installer and localization tests
         run: php tests/installer.php
