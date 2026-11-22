@@ -3,7 +3,7 @@
 Status definitions: Planned, In progress, Implemented, Tested, Released. No production features are claimed released.
 
 ## Platform
-- [Planned] Standalone modular PHP, root index.php, MySQL installer, administrator creation, no rewrite dependency.
+- [In progress] Standalone modular PHP, root index.php and single page.php renderer; installer, MySQL support, administrator creation and rewrite-free routing remain planned.
 - [Planned] English source strings, PO/MO translations, Bootstrap UI, dynamic theme CSS.
 - [In progress] Signed GitHub webhook and direct deploy script (implemented, not server-tested); live activation, health checks and rollback (planned).
 
@@ -17,8 +17,8 @@ Status definitions: Planned, In progress, Implemented, Tested, Released. No prod
 - [Planned] Marketplace integration engine, ZIP module upload, adapter contract, sync queues, category mapping and logs.
 
 ## CMS and visual builder
-- [Planned] Pages, blog posts, categories, tags, comments, revisions, SEO fields and on-page SEO scoring.
-- [Planned] Shared visual editor, fluid/contained/full-width rows, columns, widget picker, responsive controls and reusable blocks.
-- [Planned] Unlimited headers, heroes and footers with page-level assignments, shared widgets and theme settings.
+- [Implemented; testing pending] Database-backed published page lookup, selected homepage via settings, single shared page.php, basic JSON heading/paragraph rendering. Admin page CRUD, visual editor, blog, revisions, SEO remain planned.
+- [Planned] Shared visual drag-and-drop editor, fluid/contained/full-width rows, columns, widget picker, responsive controls and reusable blocks.
+- [Implemented; testing pending] Menu schema, assigned primary menu lookup and page links. [Planned] Menu CRUD, ordering/nesting UI, menu locations, unlimited headers, heroes and footers with page-level assignments, shared widgets and theme settings.
 
 Each feature will be broken into verifiable subfeatures and updated in the same PR as its implementation.
