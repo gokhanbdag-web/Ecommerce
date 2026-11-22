@@ -45,14 +45,13 @@ final class Installer
         $dir = $mysql ? 'database/mysql' : 'database/migrations';
         $paths = glob($this->root . '/' . $dir . '/*.sql') ?: [];
         sort($paths, SORT_STRING);
-        foreach ($paths as $path) {
-            $version = basename($path, '.sql');
+        $migrations = $paths ? array_combine(array_map(static fn(string $path): string => basename($path, '.sql'), $paths), array_map(static fn(string $path): string|false => file_get_contents($path), $paths)) : ($mysql ? Schema::mysql() : []);
+        foreach ($migrations as $version => $sql) {
             $stmt = $this->db->prepare('SELECT COUNT(*) FROM schema_migrations WHERE version = ?');
             $stmt->execute([$version]);
             if ((int) $stmt->fetchColumn() > 0) {
                 continue;
             }
-            $sql = file_get_contents($path);
             if ($sql === false) {
                 throw new RuntimeException('Cannot read migration');
             }
