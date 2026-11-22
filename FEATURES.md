@@ -5,7 +5,7 @@ Status definitions: Planned, In progress, Implemented, Tested, Released. No prod
 ## Platform
 - [Planned] Standalone modular PHP, root index.php, MySQL installer, administrator creation, no rewrite dependency.
 - [Planned] English source strings, PO/MO translations, Bootstrap UI, dynamic theme CSS.
-- [In progress] Signed GitHub webhook, staging worker, verified live activation, health checks, rollback.
+- [In progress] Signed GitHub webhook and direct deploy script (implemented, not server-tested); live activation, health checks and rollback (planned).
 
 ## Users
 - [Planned] User list/add/edit/delete, My Profile, email/password changes, roles and capabilities.
