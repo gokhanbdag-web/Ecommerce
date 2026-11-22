@@ -11,7 +11,8 @@ final class Application
 
     public function run(): void
     {
-        if (parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) === '/health') {
+        $requestPath = (string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+        if ($requestPath === '/health') {
             header('Content-Type: text/plain; charset=utf-8');
             echo 'ok';
             return;
@@ -28,7 +29,11 @@ final class Application
             $db = new PDO('sqlite:' . $database, null, null, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]);
-            $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+            $path = trim($requestPath, '/');
+            if ($path === 'admin' || str_starts_with($path, 'admin/')) {
+                (new \\Ecommerce\\Admin\\Controller($db, $this->root))->run($path === 'admin' ? 'settings' : substr($path, 6));
+                return;
+            }
             $page = (new PageRepository($db))->findForPath($path);
             if ($page === null) {
                 http_response_code(404);
