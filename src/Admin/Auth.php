@@ -16,7 +16,7 @@ final class Auth
         try {
             $statement->execute([$email,password_hash($password,PASSWORD_DEFAULT)]);
             return true;
-        } catch (\\PDOException $error) {
+        } catch (\PDOException $error) {
             if ($error->getCode() === '23000') return false;
             throw $error;
         }
