@@ -28,3 +28,10 @@ The initial script has no atomic release swap or automatic rollback. Do not enab
 - Health URL: `https://kodcommerce.kodvadisi.com.tr/` (must return HTTP 2xx after installation)
 
 Do not enable live sync until PHP shell execution and permissions are tested. Configure these as server environment values, not repository secrets.
+
+## Ownership and permissions — critical
+The live document root belongs to the hosting account, **not root**. Never run deployments as root and never chown live files to root. Previous root-owned deployments caused HTTP 403.
+
+Before activation verify `whoami`, `id`, `stat -c '%U:%G %a %n' /home/kodvadisi/domains/kodcommerce.kodvadisi.com.tr/public_html`, and the PHP/web-server effective user. Run webhook-triggered deployment as the correct unprivileged hosting account with write access to the live directory. Preserve owner/group during sync; do not use rsync `--owner` or `--group` or privileged execution. Use restrictive but readable directory/file modes (typically 755/644, subject to hosting ACLs). Never blanket `chmod 777`.
+
+After deploying, verify ownership and HTTP 200/expected application response, not only webhook HTTP 202. A 403 is a deployment failure. Stop before modifying permissions if the effective owner is uncertain.
