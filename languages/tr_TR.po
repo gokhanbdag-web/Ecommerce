@@ -1,0 +1,28 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Language: tr_TR\\n"
+
+msgid "Ecommerce"
+msgstr "E-ticaret"
+
+msgid "Welcome"
+msgstr "Hoş geldiniz"
+
+msgid "Site is not installed yet."
+msgstr "Site henüz kurulmadı."
+
+msgid "Page not found."
+msgstr "Sayfa bulunamadı."
+
+msgid "Site is temporarily unavailable."
+msgstr "Site geçici olarak kullanılamıyor."
+
+msgid "Site Language"
+msgstr "Site Dili"
+
+msgid "English (United States)"
+msgstr "İngilizce (Amerika Birleşik Devletleri)"
+
+msgid "Turkish (Türkiye)"
+msgstr "Türkçe (Türkiye)"
