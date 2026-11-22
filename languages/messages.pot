@@ -25,3 +25,78 @@ msgstr ""
 
 msgid "Turkish (Türkiye)"
 msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Log In"
+msgstr ""
+
+msgid "General Settings"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Site Title"
+msgstr ""
+
+msgid "Tagline"
+msgstr ""
+
+msgid "Administration Email"
+msgstr ""
+
+msgid "Timezone"
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Log Out"
+msgstr ""
+
+msgid "Install Ecommerce"
+msgstr ""
+
+msgid "Administrator Email"
+msgstr ""
+
+msgid "Administrator Password"
+msgstr ""
+
+msgid "Complete Installation"
+msgstr ""
+
+msgid "Installation already completed"
+msgstr ""
+
+msgid "Database extension unavailable"
+msgstr ""
+
+msgid "Storage unavailable"
+msgstr ""
+
+msgid "Invalid request token"
+msgstr ""
+
+msgid "Use a valid email and password of at least 12 characters."
+msgstr ""
+
+msgid "Invalid credentials"
+msgstr ""
+
+msgid "Invalid language"
+msgstr ""
+
+msgid "Invalid email"
+msgstr ""
+
+msgid "Invalid timezone"
+msgstr ""
+
+msgid "Setting too long"
+msgstr ""
