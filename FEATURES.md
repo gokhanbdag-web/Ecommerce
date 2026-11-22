@@ -3,8 +3,8 @@
 Status definitions: Planned, In progress, Implemented, Tested, Released. No production features are claimed released.
 
 ## Platform
-- [In progress] Standalone modular PHP, root index.php and single page.php renderer; installer, MySQL support, administrator creation and rewrite-free routing remain planned.
-- [Planned] English source strings, PO/MO translations, Bootstrap UI, dynamic theme CSS.
+- [In progress] Standalone modular PHP, root index.php and single page.php renderer. SQLite CLI installer and versioned migrations implemented (CI pending); web installer, MySQL, administrator creation and rewrite-free routing remain planned.
+- [In progress] English source strings, initial Turkish PO/POT catalogs, MO compiler and translator (CI pending). Site language selector, full string extraction, Bootstrap admin UI and dynamic theme CSS remain planned.
 - [In progress] Signed GitHub webhook and direct deploy script (implemented, not server-tested); live activation, health checks and rollback (planned).
 
 ## Users
@@ -22,3 +22,9 @@ Status definitions: Planned, In progress, Implemented, Tested, Released. No prod
 - [Implemented; testing pending] Menu schema, assigned primary menu lookup and page links. [Planned] Menu CRUD, ordering/nesting UI, menu locations, unlimited headers, heroes and footers with page-level assignments, shared widgets and theme settings.
 
 Each feature will be broken into verifiable subfeatures and updated in the same PR as its implementation.
+
+## Release acceptance rules
+- Every schema change updates the clean installer path, versioned migrations and installation/upgrade tests in the same PR.
+- Every new user-facing English string updates POT, Turkish PO and compiled MO output; CI must validate translations.
+- Settings > General > Site Language must become functional before the first public release. Default en_US, Turkish tr_TR.
+- No production release without admin setup, protected storage, real database configuration and functional smoke tests.

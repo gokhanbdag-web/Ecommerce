@@ -14,3 +14,7 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y php-sqlite3
       - name: CMS foundation functional tests
         run: php -d zend.assertions=1 -d assert.exception=1 tests/foundation.php
+      - name: Compile PO catalogs
+        run: php bin/compile-translations.php
+      - name: Installer and localization tests
+        run: php tests/installer.php
