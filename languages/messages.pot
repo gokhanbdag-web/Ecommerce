@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\\n"
+
+msgid "Ecommerce"
+msgstr ""
+
+msgid "Welcome"
+msgstr ""
+
+msgid "Site is not installed yet."
+msgstr ""
+
+msgid "Page not found."
+msgstr ""
+
+msgid "Site is temporarily unavailable."
+msgstr ""
+
+msgid "Site Language"
+msgstr ""
+
+msgid "English (United States)"
+msgstr ""
+
+msgid "Turkish (Türkiye)"
+msgstr ""
