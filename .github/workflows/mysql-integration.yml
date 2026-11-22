@@ -1,0 +1,47 @@
+name: MySQL integration
+on:
+  push:
+    branches: [feature/mysql-pdo-migrations]
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'database/**'
+      - 'bin/install.php'
+      - 'tests/mysql.php'
+      - '.github/workflows/mysql-integration.yml'
+jobs:
+  mysql:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testroot
+          MYSQL_DATABASE: ecommerce_ci
+          MYSQL_USER: ecommerce
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -utestuser --silent || mysqladmin ping -h 127.0.0.1 -uroot -ptestroot --silent"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PHP MySQL and SQLite extensions
+        run: sudo apt-get update -qq && sudo apt-get install -y php-mysql php-sqlite3
+      - name: PHP lint
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: Existing SQLite installer regression
+        run: |
+          php bin/compile-translations.php
+          php tests/installer.php
+          php -d zend.assertions=1 -d assert.exception=1 tests/foundation.php
+      - name: MySQL installation and idempotency
+        env:
+          ECOMMERCE_TEST_MYSQL: '1'
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+          MYSQL_DATABASE: ecommerce_ci
+          MYSQL_USER: ecommerce
+          MYSQL_PASSWORD: testpass
+        run: php tests/mysql.php
