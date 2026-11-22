@@ -13,8 +13,13 @@ final class Auth
     {
         if ($this->hasAdministrator() || !filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($password) < 12) return false;
         $statement = $this->db->prepare('INSERT INTO administrators(email,password_hash) VALUES (?,?)');
-        $statement->execute([$email,password_hash($password,PASSWORD_DEFAULT)]);
-        return true;
+        try {
+            $statement->execute([$email,password_hash($password,PASSWORD_DEFAULT)]);
+            return true;
+        } catch (\\PDOException $error) {
+            if ($error->getCode() === '23000') return false;
+            throw $error;
+        }
     }
     public function login(string $email, string $password): bool
     {
