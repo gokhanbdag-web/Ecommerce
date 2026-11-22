@@ -3,10 +3,10 @@ set -Eeuo pipefail
 umask 027
 
 # Server-specific paths must be set outside GitHub.
-: "${ECOMMERCE_REPO_DIR:?Set staging repository path}"
-: "${ECOMMERCE_LIVE_DIR:?Set live document root}"
-: "${ECOMMERCE_DEPLOY_LOG:?Set private log path}"
-: "${ECOMMERCE_HEALTH_URL:?Set health check URL}"
+ECOMMERCE_REPO_DIR="/home/kodcommerce.kodvadisi.com.tr/ecommerce-repo"
+ECOMMERCE_LIVE_DIR="/home/kodcommerce.kodvadisi.com.tr/public_html"
+ECOMMERCE_DEPLOY_LOG="/home/kodcommerce.kodvadisi.com.tr/ecommerce-deploy.log"
+ECOMMERCE_HEALTH_URL="https://kodcommerce.kodvadisi.com.tr/"
 sha="${1:-}"
 [[ "$sha" =~ ^[a-f0-9]{40}$ ]] || exit 2
 exec 9>"${ECOMMERCE_DEPLOY_LOG}.lock"
