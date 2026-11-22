@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 umask 027
+if [[ "$(id -u)" != "5004" || "$(id -un)" != "kodco8881" ]]; then
+  echo "Refusing deployment: expected hosting user kodco8881 (UID 5004)" >&2
+  exit 1
+fi
 
 # Server-specific paths must be set outside GitHub.
 ECOMMERCE_REPO_DIR="/home/kodcommerce.kodvadisi.com.tr/ecommerce-repo"
@@ -27,8 +31,13 @@ if [[ "${ECOMMERCE_ENABLE_LIVE:-0}" != "1" ]]; then
   echo "Validation succeeded; live activation disabled"
   exit 0
 fi
+if [[ ! -f "$ECOMMERCE_REPO_DIR/index.php" ]]; then
+  echo "Live activation refused: repository root index.php is missing"
+  exit 1
+fi
 # Never sync deployment utilities or repository metadata into the web root.
-rsync -a --delete \
+rsync -rltD --delete \
+  --exclude='deploy-hook.php' \
   --exclude='.git/' --exclude='.github/' --exclude='deploy/' \
   --exclude='.env' --exclude='config/local.php' --exclude='uploads/' \
   --exclude='storage/' --exclude='DEPLOYMENT.md' \
