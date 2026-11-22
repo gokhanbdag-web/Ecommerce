@@ -12,7 +12,7 @@ final class PageRepository
     {
         if ($path === '') {
             $query = $this->db->prepare(
-                "SELECT p.* FROM pages p JOIN settings s ON s.value = CAST(p.id AS TEXT)
+                "SELECT p.* FROM pages p JOIN settings s ON s.value = p.id
                  WHERE s.name = 'homepage_page_id' AND p.status = 'published' LIMIT 1"
             );
             $query->execute();

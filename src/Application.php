@@ -2,7 +2,7 @@
 declare(strict_types=1);
 namespace Ecommerce;
 
-use PDO;
+use Ecommerce\Database\Connection;
 use Throwable;
 
 final class Application
@@ -17,17 +17,14 @@ final class Application
             return;
         }
 
-        $database = $this->root . '/storage/site.sqlite';
-        if (!is_file($database)) {
+        if (!is_file(dirname($this->root) . '/ecommerce-db.php')) {
             http_response_code(503);
             echo 'Site is not installed yet.';
             return;
         }
 
         try {
-            $db = new PDO('sqlite:' . $database, null, null, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            ]);
+            $db = Connection::open($this->root);
             $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
             $page = (new PageRepository($db))->findForPath($path);
             if ($page === null) {

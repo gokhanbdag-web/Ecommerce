@@ -18,9 +18,17 @@ final class Installer
         }
         $this->db->beginTransaction();
         try {
-            $this->db->exec("INSERT INTO pages(title,slug,status,content_json) VALUES ('Home','home','published','[{\"type\":\"heading\",\"text\":\"Welcome\"}]')");
-            $this->db->exec("INSERT OR IGNORE INTO settings(name,value) VALUES ('homepage_page_id','1')");
-            $this->db->exec("INSERT OR IGNORE INTO settings(name,value) VALUES ('site_language','en_US')");
+            $stmt = $this->db->prepare('INSERT INTO pages(title,slug,status,content_json) VALUES (?,?,?,?)');
+            $stmt->execute(['Home', 'home', 'published', '[{"type":"heading","text":"Welcome"}]']);
+            $pageId = (string) $this->db->lastInsertId();
+            $settings = $this->db->prepare('INSERT INTO settings(name,value) VALUES (?,?)');
+            $check = $this->db->prepare('SELECT COUNT(*) FROM settings WHERE name = ?');
+            foreach (['homepage_page_id' => $pageId, 'site_language' => 'en_US'] as $name => $value) {
+                $check->execute([$name]);
+                if ((int) $check->fetchColumn() === 0) {
+                    $settings->execute([$name, $value]);
+                }
+            }
             $this->db->commit();
         } catch (\Throwable $e) {
             $this->db->rollBack();
@@ -30,8 +38,12 @@ final class Installer
 
     public function migrate(): void
     {
-        $this->db->exec('CREATE TABLE IF NOT EXISTS schema_migrations (version TEXT PRIMARY KEY)');
-        $paths = glob($this->root . '/database/migrations/*.sql') ?: [];
+        $mysql = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
+        $this->db->exec($mysql
+            ? 'CREATE TABLE IF NOT EXISTS schema_migrations (version VARCHAR(191) NOT NULL PRIMARY KEY) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
+            : 'CREATE TABLE IF NOT EXISTS schema_migrations (version TEXT PRIMARY KEY)');
+        $dir = $mysql ? 'database/mysql' : 'database/migrations';
+        $paths = glob($this->root . '/' . $dir . '/*.sql') ?: [];
         sort($paths, SORT_STRING);
         foreach ($paths as $path) {
             $version = basename($path, '.sql');
@@ -44,14 +56,29 @@ final class Installer
             if ($sql === false) {
                 throw new RuntimeException('Cannot read migration');
             }
-            $this->db->beginTransaction();
+            // MySQL DDL implicitly commits: record version only after all statements succeed.
+            if (!$mysql) {
+                $this->db->beginTransaction();
+            }
             try {
-                $this->db->exec($sql);
+                if ($mysql) {
+                    foreach (explode(';', $sql) as $statement) {
+                        if (trim($statement) !== '') {
+                            $this->db->exec($statement);
+                        }
+                    }
+                } else {
+                    $this->db->exec($sql);
+                }
                 $record = $this->db->prepare('INSERT INTO schema_migrations(version) VALUES (?)');
                 $record->execute([$version]);
-                $this->db->commit();
+                if (!$mysql) {
+                    $this->db->commit();
+                }
             } catch (\Throwable $e) {
-                $this->db->rollBack();
+                if ($this->db->inTransaction()) {
+                    $this->db->rollBack();
+                }
                 throw $e;
             }
         }
