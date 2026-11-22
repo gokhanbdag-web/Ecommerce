@@ -26,6 +26,10 @@ final class Application
         try {
             $db = Connection::open($this->root);
             $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
+            if ($path === 'admin' || str_starts_with($path, 'admin/')) {
+                (new \\Ecommerce\\Admin\\Controller($db, $this->root))->run($path === 'admin' ? 'settings' : substr($path, 6));
+                return;
+            }
             $page = (new PageRepository($db))->findForPath($path);
             if ($page === null) {
                 http_response_code(404);
