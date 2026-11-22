@@ -10,3 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: PHP syntax check
         run: find . -type f -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -r -n1 php -l
+      - name: Install SQLite PHP extension
+        run: sudo apt-get update -qq && sudo apt-get install -y php-sqlite3
+      - name: CMS foundation functional tests
+        run: php -d zend.assertions=1 -d assert.exception=1 tests/foundation.php
