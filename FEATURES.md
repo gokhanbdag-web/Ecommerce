@@ -3,8 +3,8 @@
 Status definitions: Planned, In progress, Implemented, Tested, Released. No production features are claimed released.
 
 ## Platform
-- [In progress] Standalone modular PHP, root index.php and single page.php renderer. SQLite CLI installer and versioned migrations implemented (CI pending); web installer, MySQL, administrator creation and rewrite-free routing remain planned.
-- [In progress] English source strings, initial Turkish PO/POT catalogs, MO compiler and translator (CI pending). Site language selector, full string extraction, Bootstrap admin UI and dynamic theme CSS remain planned.
+- [In progress] Standalone modular PHP, root index.php and single page.php renderer. SQLite CLI installer and versioned migrations implemented (CI pending); web installer with first administrator setup, login and general settings implemented (CI pending); MySQL support, production hardening and rewrite-free routing remain planned.
+- [In progress] English source strings, initial Turkish PO/POT catalogs, MO compiler and translator (CI pending). Site language selector and Bootstrap general settings screen implemented (CI pending); complete string extraction, installer localization and dynamic theme CSS remain planned.
 - [In progress] Signed GitHub webhook and direct deploy script (implemented, not server-tested); live activation, health checks and rollback (planned).
 
 ## Users
@@ -28,3 +28,8 @@ Each feature will be broken into verifiable subfeatures and updated in the same 
 - Every new user-facing English string updates POT, Turkish PO and compiled MO output; CI must validate translations.
 - Settings > General > Site Language must become functional before the first public release. Default en_US, Turkish tr_TR.
 - No production release without admin setup, protected storage, real database configuration and functional smoke tests.
+
+## PR #4 scope and limitations
+- [Implemented; CI pending] Web installer with initial administrator creation, password hashing and one-time setup guard; SQLite database stored outside public_html by default.
+- [Implemented; CI pending] Session login/logout, CSRF validation, protected general settings and en_US/tr_TR selector.
+- [Planned] MySQL database connection wizard, installation locks/race protection, brute-force throttling, email verification and production deployment validation.
