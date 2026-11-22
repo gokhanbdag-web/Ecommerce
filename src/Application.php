@@ -18,13 +18,16 @@ final class Application
         }
 
         if (!is_file(dirname($this->root) . '/ecommerce-db.php')) {
-            http_response_code(503);
-            echo 'Site is not installed yet.';
+            header('Location: /install.php', true, 302);
             return;
         }
 
         try {
             $db = Connection::open($this->root);
+            if (!(new \\Ecommerce\\Admin\\Auth($db))->hasAdministrator()) {
+                header('Location: /install.php', true, 302);
+                return;
+            }
             $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/');
             if ($path === 'admin' || str_starts_with($path, 'admin/')) {
                 (new \Ecommerce\Admin\Controller($db, $this->root))->run($path === 'admin' ? 'settings' : substr($path, 6));
