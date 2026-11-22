@@ -5,9 +5,10 @@ use Ecommerce\Database\Installer;
 use Ecommerce\Admin\Auth;
 $root = __DIR__;
 if (!extension_loaded('pdo_sqlite')) { http_response_code(503); exit('Database extension unavailable'); }
-$dir = $root . '/storage';
+$databasePath = getenv('ECOMMERCE_DB_PATH') ?: dirname($root) . '/ecommerce-storage/site.sqlite';
+$dir = dirname($databasePath);
 if (!is_dir($dir) && !mkdir($dir,0700,true) && !is_dir($dir)) { http_response_code(503); exit('Storage unavailable'); }
-$db = new PDO('sqlite:' . $dir . '/site.sqlite',null,null,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
+$db = new PDO('sqlite:' . $databasePath,null,null,[PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION]);
 (new Installer($db,$root))->install();
 $auth = new Auth($db);
 if ($auth->hasAdministrator()) { http_response_code(403); exit('Installation already completed'); }
