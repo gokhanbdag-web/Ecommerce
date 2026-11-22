@@ -1,0 +1,30 @@
+name: Deployment safety
+on:
+  push:
+    branches: [feature/safe-live-mysql-deployment]
+  pull_request:
+    paths:
+      - 'deploy/**'
+      - '.github/workflows/deployment-safety.yml'
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate deployment shell syntax
+        run: bash -n deploy/deploy-main.sh
+      - name: Enforce safe sync and health checks
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          script = Path('deploy/deploy-main.sh').read_text()
+          assert '--delete' not in script
+          assert '--exclude=\'*\'' in script
+          assert "--include='/src/***'" in script
+          assert "--include='/languages/***'" in script
+          assert 'ecommerce-db.php' in script
+          assert 'restore_on_failure' in script
+          assert 'ECOMMERCE_HOME_URL' in script
+          assert 'ECOMMERCE_HEALTH_URL' in script
+          print('Deployment safety assertions passed')
+          PY
