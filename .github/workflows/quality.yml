@@ -18,3 +18,5 @@ jobs:
         run: php bin/compile-translations.php
       - name: Installer and localization tests
         run: php tests/installer.php
+      - name: Admin and language settings tests
+        run: php tests/admin.php
