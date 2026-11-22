@@ -22,9 +22,9 @@ The initial script has no atomic release swap or automatic rollback. Do not enab
 
 ## Confirmed target
 - Domain: https://kodcommerce.kodvadisi.com.tr
-- Live document root: `/home/kodvadisi/domains/kodcommerce.kodvadisi.com.tr/public_html`
-- Suggested private repo checkout: `/home/kodvadisi/ecommerce-repo` (must be created/verified)
-- Suggested private log: `/home/kodvadisi/ecommerce-deploy.log` (must be writable)
+- Live document root: `/home/kodcommerce.kodvadisi.com.tr/public_html`
+- Suggested private repo checkout: `/home/kodcommerce.kodvadisi.com.tr/ecommerce-repo` (must be created/verified)
+- Suggested private log: `/home/kodcommerce.kodvadisi.com.tr/ecommerce-deploy.log` (must be writable)
 - Health URL: `https://kodcommerce.kodvadisi.com.tr/` (must return HTTP 2xx after installation)
 
 Do not enable live sync until PHP shell execution and permissions are tested. Configure these as server environment values, not repository secrets.
@@ -32,6 +32,9 @@ Do not enable live sync until PHP shell execution and permissions are tested. Co
 ## Ownership and permissions — critical
 The live document root belongs to the hosting account, **not root**. Never run deployments as root and never chown live files to root. Previous root-owned deployments caused HTTP 403.
 
-Before activation verify `whoami`, `id`, `stat -c '%U:%G %a %n' /home/kodvadisi/domains/kodcommerce.kodvadisi.com.tr/public_html`, and the PHP/web-server effective user. Run webhook-triggered deployment as the correct unprivileged hosting account with write access to the live directory. Preserve owner/group during sync; do not use rsync `--owner` or `--group` or privileged execution. Use restrictive but readable directory/file modes (typically 755/644, subject to hosting ACLs). Never blanket `chmod 777`.
+Before activation verify `whoami`, `id`, `stat -c '%U:%G %a %n' /home/kodcommerce.kodvadisi.com.tr/public_html`, and the PHP/web-server effective user. Run webhook-triggered deployment as the correct unprivileged hosting account with write access to the live directory. Preserve owner/group during sync; do not use rsync `--owner` or `--group` or privileged execution. Use restrictive but readable directory/file modes (typically 755/644, subject to hosting ACLs). Never blanket `chmod 777`.
 
 After deploying, verify ownership and HTTP 200/expected application response, not only webhook HTTP 202. A 403 is a deployment failure. Stop before modifying permissions if the effective owner is uncertain.
+
+## Verified PHP execution (2026-11-22)
+Domain PHP effective UID/GID: 5004/5004 (`kodco8881`); web PHP `exec` available. Hosting public_html directory owner/group `kodco8881:nobody`, mode `750`. Do not change ownership or directory mode. Git checkout cloned as `kodco8881` on main at `2064cf6`. These facts do not establish that web PHP inherits SSH environment variables; verify separately before installing the webhook.
