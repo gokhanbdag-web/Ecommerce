@@ -1,0 +1,44 @@
+name: MySQL web installer and admin
+on:
+  push:
+    branches: [feature/mysql-web-installer-admin]
+  pull_request:
+    paths:
+      - 'install.php'
+      - 'src/**'
+      - 'templates/**'
+      - 'database/mysql/**'
+      - 'tests/mysql-admin.php'
+      - '.github/workflows/mysql-web-installer.yml'
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testroot
+          MYSQL_DATABASE: ecommerce_admin_ci
+          MYSQL_USER: ecommerce
+          MYSQL_PASSWORD: testpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -ptestroot --silent"
+          --health-interval=10s --health-timeout=5s --health-retries=12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PHP MySQL
+        run: sudo apt-get update -qq && sudo apt-get install -y php-mysql php-sqlite3
+      - name: PHP syntax
+        run: find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+      - name: MySQL administrator and settings
+        env:
+          ECOMMERCE_TEST_MYSQL: '1'
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DATABASE: ecommerce_admin_ci
+          MYSQL_USER: ecommerce
+          MYSQL_PASSWORD: testpass
+        run: php tests/mysql-admin.php
+      - name: Deployment syntax
+        run: bash -n deploy/deploy-main.sh
