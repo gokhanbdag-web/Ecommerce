@@ -2,9 +2,10 @@
 declare(strict_types=1);
 
 // GitHub webhook: verify the exact repository, branch and signed request.
-$secret = getenv('ECOMMERCE_WEBHOOK_SECRET') ?: '';
-$script = getenv('ECOMMERCE_DEPLOY_SCRIPT') ?: '';
-if ($secret === '' || $script === '' || !is_file($script) || !is_executable($script)) {
+$secretFile = '/home/kodcommerce.kodvadisi.com.tr/.ecommerce-webhook-secret';
+$script = '/home/kodcommerce.kodvadisi.com.tr/deploy-main.sh';
+$secret = is_readable($secretFile) ? trim((string) file_get_contents($secretFile)) : '';
+if (strlen($secret) < 32 || !is_file($script) || !is_readable($script)) {
     http_response_code(503); exit('Deployment not configured');
 }
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { http_response_code(405); exit; }
@@ -24,7 +25,7 @@ if (($_SERVER['HTTP_X_GITHUB_EVENT'] ?? '') !== 'push'
 }
 // Execute immediately; no cron or polling. Argument is validated SHA only.
 // Do not expose the shell command or its output in the HTTP response.
-$command = escapeshellarg($script) . ' ' . escapeshellarg($event['after']);
+$command = '/usr/bin/bash ' . escapeshellarg($script) . ' ' . escapeshellarg($event['after']);
 exec($command . ' >/dev/null 2>&1 &');
 http_response_code(202);
 echo 'Deployment triggered; result must be checked in deploy log';
