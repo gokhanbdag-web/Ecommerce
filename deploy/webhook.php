@@ -1,27 +1,30 @@
 <?php
 declare(strict_types=1);
 
-// GitHub push receiver. Configure secrets on the server, never in Git.
+// GitHub webhook: verify the exact repository, branch and signed request.
 $secret = getenv('ECOMMERCE_WEBHOOK_SECRET') ?: '';
-$queue = getenv('ECOMMERCE_DEPLOY_QUEUE') ?: '';
-if ($secret === '' || $queue === '') { http_response_code(503); exit('Not configured'); }
+$script = getenv('ECOMMERCE_DEPLOY_SCRIPT') ?: '';
+if ($secret === '' || $script === '' || !is_file($script) || !is_executable($script)) {
+    http_response_code(503); exit('Deployment not configured');
+}
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { http_response_code(405); exit; }
-$body = file_get_contents('php://input');
+$body = file_get_contents('php://input', false, null, 0, 1048577);
 if ($body === false || strlen($body) > 1048576) { http_response_code(413); exit; }
 $signature = $_SERVER['HTTP_X_HUB_SIGNATURE_256'] ?? '';
 if (!hash_equals('sha256=' . hash_hmac('sha256', $body, $secret), $signature)) {
     http_response_code(401); exit('Invalid signature');
 }
-$data = json_decode($body, true);
+$event = json_decode($body, true);
 if (($_SERVER['HTTP_X_GITHUB_EVENT'] ?? '') !== 'push'
-    || ($data['repository']['full_name'] ?? '') !== 'gokhanbdag-web/Ecommerce'
-    || ($data['ref'] ?? '') !== 'refs/heads/main'
-    || !preg_match('/^[a-f0-9]{40}$/', $data['after'] ?? '')) {
+    || ($event['repository']['full_name'] ?? '') !== 'gokhanbdag-web/Ecommerce'
+    || ($event['ref'] ?? '') !== 'refs/heads/main'
+    || !is_string($event['after'] ?? null)
+    || !preg_match('/^[a-f0-9]{40}$/', $event['after'])) {
     http_response_code(202); exit('Ignored');
 }
-$tmp = $queue . '.' . bin2hex(random_bytes(8)) . '.tmp';
-if (file_put_contents($tmp, $data['after'] . "\n", LOCK_EX) === false || !rename($tmp, $queue)) {
-    http_response_code(500); exit('Queue failed');
-}
+// Execute immediately; no cron or polling. Argument is validated SHA only.
+// Do not expose the shell command or its output in the HTTP response.
+$command = escapeshellarg($script) . ' ' . escapeshellarg($event['after']);
+exec($command . ' >/dev/null 2>&1 &');
 http_response_code(202);
-echo 'Queued, not yet deployed';
+echo 'Deployment triggered; result must be checked in deploy log';
