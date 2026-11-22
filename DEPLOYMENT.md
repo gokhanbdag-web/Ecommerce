@@ -19,3 +19,12 @@ The HTTP 202 response means **triggered**, not deployed. Read the private deploy
 
 ## Important
 The initial script has no atomic release swap or automatic rollback. Do not enable live activation on a production store before these safeguards are added and tested. It preserves .env, config/local.php, uploads and storage; add any other persistent paths before enabling. Database schema migrations must be separately reviewed. No cron is used.
+
+## Confirmed target
+- Domain: https://kodcommerce.kodvadisi.com.tr
+- Live document root: `/home/kodvadisi/domains/kodcommerce.kodvadisi.com.tr/public_html`
+- Suggested private repo checkout: `/home/kodvadisi/ecommerce-repo` (must be created/verified)
+- Suggested private log: `/home/kodvadisi/ecommerce-deploy.log` (must be writable)
+- Health URL: `https://kodcommerce.kodvadisi.com.tr/` (must return HTTP 2xx after installation)
+
+Do not enable live sync until PHP shell execution and permissions are tested. Configure these as server environment values, not repository secrets.
