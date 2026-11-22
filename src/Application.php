@@ -18,7 +18,7 @@ final class Application
             return;
         }
 
-        $database = $this->root . '/storage/site.sqlite';
+        $database = getenv('ECOMMERCE_DB_PATH') ?: dirname($this->root) . '/ecommerce-storage/site.sqlite';
         if (!is_file($database)) {
             http_response_code(503);
             echo 'Site is not installed yet.';
