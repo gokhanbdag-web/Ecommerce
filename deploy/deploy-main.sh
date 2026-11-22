@@ -43,8 +43,8 @@ fi
 # Only public runtime files are deployed. Existing user files remain untouched.
 # Database migrations must be applied manually, with a DB backup, before activation.
 includes=(
-  --include='/index.php' --include='/page.php'
-  --include='/src/***' --include='/languages/***'
+  --include='/index.php' --include='/page.php' --include='/install.php'
+  --include='/src/***' --include='/languages/***' --include='/templates/***'
   --exclude='*'
 )
 backup_dir="$SITE_ROOT/ecommerce-deploy-backups/$sha"
