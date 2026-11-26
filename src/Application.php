@@ -24,7 +24,7 @@ final class Application
 
         try {
             $db = Connection::open($this->root);
-            if (!(new \\Ecommerce\\Admin\\Auth($db))->hasAdministrator()) {
+            if (!(new \Ecommerce\Admin\Auth($db))->hasAdministrator()) {
                 header('Location: /install.php', true, 302);
                 return;
             }
