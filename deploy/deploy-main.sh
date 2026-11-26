@@ -37,11 +37,10 @@ fi
   { echo "Refusing deployment: application entrypoints missing"; exit 1; }
 [[ -d "$ECOMMERCE_LIVE_DIR" && ! -L "$ECOMMERCE_LIVE_DIR" ]] ||
   { echo "Refusing deployment: live directory missing or symlink"; exit 1; }
-[[ -f "$SITE_ROOT/ecommerce-db.php" ]] ||
-  { echo "Refusing deployment: private MySQL config missing"; exit 1; }
 
 # Only public runtime files are deployed. Existing user files remain untouched.
-# Database migrations must be applied manually, with a DB backup, before activation.
+# Private ecommerce-db.php stays outside the public runtime allowlist.
+# Runtime installer initializes the database through the browser on first visit.
 includes=(
   --include='/index.php' --include='/page.php' --include='/install.php'
   --include='/src/***' --include='/languages/***' --include='/templates/***'

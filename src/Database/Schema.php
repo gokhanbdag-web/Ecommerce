@@ -1,0 +1,52 @@
+<?php
+declare(strict_types=1);
+namespace Ecommerce\Database;
+
+/** Runtime migration definitions for web installs without a source checkout. */
+final class Schema
+{
+    public static function mysql(): array
+    {
+        return [
+            '001_initial' => <<<'SQL'
+CREATE TABLE IF NOT EXISTS pages (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(191) NOT NULL UNIQUE,
+  status VARCHAR(32) NOT NULL DEFAULT 'draft',
+  content_json LONGTEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS settings (
+  name VARCHAR(191) NOT NULL PRIMARY KEY,
+  value TEXT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS menus (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  location VARCHAR(191) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE IF NOT EXISTS menu_items (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  menu_id BIGINT UNSIGNED NOT NULL,
+  page_id BIGINT UNSIGNED NULL,
+  parent_id BIGINT UNSIGNED NULL,
+  label VARCHAR(255) NOT NULL,
+  url TEXT NOT NULL,
+  position INT NOT NULL DEFAULT 0,
+  CONSTRAINT fk_menu_items_menu FOREIGN KEY (menu_id) REFERENCES menus(id),
+  CONSTRAINT fk_menu_items_page FOREIGN KEY (page_id) REFERENCES pages(id),
+  CONSTRAINT fk_menu_items_parent FOREIGN KEY (parent_id) REFERENCES menu_items(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+SQL,
+            '002_language' => "INSERT IGNORE INTO settings(name,value) VALUES ('site_language','en_US');",
+            '003_administrators' => <<<'SQL'
+CREATE TABLE IF NOT EXISTS administrators (
+ id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ email VARCHAR(191) NOT NULL UNIQUE,
+ installation_slot TINYINT NOT NULL DEFAULT 1 UNIQUE,
+ password_hash VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+SQL,
+        ];
+    }
+}
