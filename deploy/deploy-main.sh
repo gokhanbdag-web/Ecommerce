@@ -39,6 +39,7 @@ fi
   { echo "Refusing deployment: live directory missing or symlink"; exit 1; }
 
 # Only public runtime files are deployed. Existing user files remain untouched.
+# Private ecommerce-db.php stays outside the public runtime allowlist.
 # Runtime installer initializes the database through the browser on first visit.
 includes=(
   --include='/index.php' --include='/page.php' --include='/install.php'
